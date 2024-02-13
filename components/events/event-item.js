@@ -16,7 +16,7 @@ const EventItem = ({event: {id, title, location, date, image}}) => {
 
   return (
     <li className={classes.item} key={id}>
-      <img src={`${image}`} alt={title} />
+      <img src={`/${image}`} alt={title} />
       <div className={classes.content}>
         <div>
           <h2>{title}</h2>
