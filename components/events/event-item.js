@@ -5,9 +5,7 @@ import DateIcon from '../icons/date-icon';
 import AddressIcon from '../icons/address-icon';
 import RightArrowIcon from '../icons/arrow-right-icon';
 
-const EventItem = ({
-  event: {id, title, description, location, date, image},
-}) => {
+const EventItem = ({event: {id, title, location, date, image}}) => {
   const humanReadableDate = new Date(date).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',
@@ -20,7 +18,7 @@ const EventItem = ({
     <li className={classes.item} key={id}>
       <img src={`${image}`} alt={title} />
       <div className={classes.content}>
-        <div className={classes.summary}>
+        <div>
           <h2>{title}</h2>
           <div className={classes.date}>
             <DateIcon />
