@@ -2,10 +2,11 @@ import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import useSWR from 'swr';
 
-import EventList from '../../components/events/event-list';
-import ResultsTitle from '../../components/events/results-title';
-import Button from '../../components/ui/button';
-import ErrorAlert from '../../components/ui/error-alert';
+import EventList from '@/components/events/event-list';
+import ResultsTitle from '@/components/events/results-title';
+import Button from '@/components/ui/button';
+import ErrorAlert from '@/components/ui/error-alert';
+import Head from 'next/head';
 
 const FilteredEvent = () => {
   const router = useRouter();
@@ -17,7 +18,7 @@ const FilteredEvent = () => {
 
   const {data, error} = useSWR(
     'https://next-demo-1f261-default-rtdb.firebaseio.com/events.json',
-    fetcher
+    fetcher,
   );
 
   useEffect(() => {
@@ -33,12 +34,31 @@ const FilteredEvent = () => {
     }
   }, [data]);
 
+  let pageHeadData = (
+    <Head>
+      <title>Filtered events</title>
+      <meta name='description' content='A list of filtered events' />
+    </Head>
+  );
+
   if (!filters || !events) {
-    return <ErrorAlert className='center'>Loading...</ErrorAlert>;
+    return (
+      <>
+        {pageHeadData}
+        <ErrorAlert className='center'>Loading...</ErrorAlert>
+      </>
+    );
   }
 
   const year = +filters[0];
   const month = +filters[1];
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered events</title>
+      <meta name='description' content={`All events for ${month}/${year}`} />
+    </Head>
+  );
 
   if (
     isNaN(year) ||
@@ -51,6 +71,7 @@ const FilteredEvent = () => {
   ) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>Invalid filter. Please adjust your values</ErrorAlert>
         <div className='center'>
           <Button href='/events'>Show All Events</Button>
@@ -69,6 +90,7 @@ const FilteredEvent = () => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>No events found for the chosen filters!</ErrorAlert>
         <div className='center'>
           <Button href='/events'>Show All Events</Button>
@@ -81,6 +103,7 @@ const FilteredEvent = () => {
 
   return (
     <>
+      {pageHeadData}
       <ResultsTitle date={readableDate} />
       <EventList events={filteredEvents} />
     </>

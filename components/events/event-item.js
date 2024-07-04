@@ -12,7 +12,7 @@ const EventItem = ({event: {id, title, location, date, image}}) => {
     year: 'numeric',
   });
 
-  const address = location.replace(', ', '\n');
+  const address = location?.replace(', ', '\n');
 
   return (
     <li className={classes.item} key={id}>
