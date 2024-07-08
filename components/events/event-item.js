@@ -1,9 +1,11 @@
+import Image from 'next/image';
+
 import classes from './event-item.module.css';
 
-import Button from '../ui/button';
-import DateIcon from '../icons/date-icon';
-import AddressIcon from '../icons/address-icon';
-import RightArrowIcon from '../icons/arrow-right-icon';
+import AddressIcon from '@/components/icons/address-icon';
+import RightArrowIcon from '@/components/icons/arrow-right-icon';
+import DateIcon from '@/components/icons/date-icon';
+import Button from '@/components/ui/button';
 
 const EventItem = ({event: {id, title, location, date, image}}) => {
   const humanReadableDate = new Date(date).toLocaleDateString('en-US', {
@@ -16,7 +18,7 @@ const EventItem = ({event: {id, title, location, date, image}}) => {
 
   return (
     <li className={classes.item} key={id}>
-      <img src={`/${image}`} alt={title} />
+      <Image src={`/${image}`} alt={title} width={250} height={160} />
       <div className={classes.content}>
         <div>
           <h2>{title}</h2>
