@@ -13,6 +13,11 @@
   color: #03be9f;
   border: 1px solid #03be9f;
   cursor: pointer;
+  background-color: #dcfff9;
+}
+
+.comments h4 {
+  font: inherit;
 }
 
 .comments button:hover,
