@@ -1,9 +1,15 @@
-import {connectToDatabase} from '@/helpers/db';
+import {connectToDatabase, getAllDocs, insertDocument} from '@/helpers/db';
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
 
-  const {client, db} = await connectToDatabase();
+  let client;
+
+  try {
+    client = await connectToDatabase();
+  } catch (error) {
+    return res.status(500).json({message: 'Failed to connect to the Database'});
+  }
 
   if (req.method === 'POST') {
     const {email, name, text} = req.body;
@@ -16,6 +22,7 @@ async function handler(req, res) {
       !text ||
       text.trim() === ''
     ) {
+      client.close();
       return res.status(422).json({message: 'Invalid input'});
     }
 
@@ -26,19 +33,23 @@ async function handler(req, res) {
       eventId,
     };
 
-    const result = await db.collection('comments').insertOne(newComment);
+    let result;
 
-    newComment.id = result.insertedId;
+    try {
+      result = await insertDocument(client, 'comments', newComment);
+      newComment._id = result.insertedId;
 
-    res.status(201).json({message: 'Comment added.', comment: newComment});
+      res.status(201).json({message: 'Comment added.', comment: newComment});
+    } catch (error) {
+      res.status(500).json({message: 'Inserting data failed'});
+    }
   } else if (req.method === 'GET') {
-    const results = await db
-      .collection('comments')
-      .find({eventId})
-      .sort({_id: -1}) //desc
-      .toArray();
-
-    res.status(200).json({comments: results});
+    try {
+      const results = await getAllDocs(client, 'comments', {_id: -1});
+      res.status(200).json({comments: results});
+    } catch (error) {
+      res.status(500).json({message: 'Failed to fetch the data'});
+    }
   }
 
   client.close();
