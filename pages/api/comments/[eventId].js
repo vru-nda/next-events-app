@@ -45,7 +45,12 @@ async function handler(req, res) {
     }
   } else if (req.method === 'GET') {
     try {
-      const results = await getAllDocs(client, 'comments', {_id: -1});
+      const results = await getAllDocs(
+        client,
+        'comments',
+        {_id: -1},
+        {eventId},
+      );
       res.status(200).json({comments: results});
     } catch (error) {
       res.status(500).json({message: 'Failed to fetch the data'});

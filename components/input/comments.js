@@ -40,10 +40,14 @@ function Comments(props) {
         {showComments ? 'Hide' : 'Show'} Comments
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && comments && comments.length > 0 ? (
-        <CommentList items={comments} />
-      ) : (
-        <h4>No Comments</h4>
+      {showComments && (
+        <>
+          {comments && comments.length > 0 ? (
+            <CommentList items={comments} />
+          ) : (
+            <h4>No Comments</h4>
+          )}
+        </>
       )}
     </section>
   );
